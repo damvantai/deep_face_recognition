@@ -33,8 +33,8 @@ class YOLO(object):
         self.model_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/ep069-loss46.542-val_loss45.218.h5'  # model path or trained weights path
         self.anchors_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/yolo_anchors.txt'
         self.classes_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/face.txt'
-        self.score = 0.3
-        self.iou = 0.2
+        self.score = 0.25
+        self.iou = 0.1
         self.class_names = self._get_class()
         self.anchors = self._get_anchors()
         self.sess = K.get_session()

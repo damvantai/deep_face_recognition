@@ -216,7 +216,7 @@ def main():
 
     # Create Object Tracker
     # tracker = Tracker(iou_thresh=0.3, max_frames_to_skip=5, max_trace_length=20, trackIdCount=0)
-    tracker = Tracker(iou_thresh=0.1, max_frames_to_skip=10, max_trace_length=20, trackIdCount=0)
+    tracker = Tracker(iou_thresh=0.1, max_frames_to_skip=10, max_trace_length=15, trackIdCount=0)
 
     # Variables initialization
     # track_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
@@ -340,8 +340,8 @@ def main():
                         tracker.tracks[i].counted = True
                         x_center_first = tracker.tracks[i].trace[0][0][0]
                         y_center_first = tracker.tracks[i].trace[0][1][0]
-                        x_center_second = tracker.tracks[i].trace[8][0][0]
-                        y_center_second = tracker.tracks[i].trace[8][1][0]
+                        x_center_second = tracker.tracks[i].trace[7][0][0]
+                        y_center_second = tracker.tracks[i].trace[7][1][0]
                         # if y_center_first > (a * x_center_first + b):
                         #     count_people["people_come_out"] += 1
                         # if y_center_first < (a * x_center_first + b):
