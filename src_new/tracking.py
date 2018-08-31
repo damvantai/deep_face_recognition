@@ -32,7 +32,7 @@ class YOLO(object):
         self.anchors_path = 'model_data/yolo_anchors.txt'
         self.classes_path = 'model_data/coco_classes.txt'
         self.score = 0.3
-        self.iou = 0.45
+        self.iou = 0.25
         self.class_names = self._get_class()
         self.anchors = self._get_anchors()
         self.sess = K.get_session()
