@@ -1,4 +1,4 @@
-# detectors.py
+# detector.py
 # tracker.py
 
 from detectors import YOLO
@@ -320,8 +320,8 @@ def main():
                 # if len(tracker.tracks[i].trace) >= 9:
                 if len(tracker.tracks[i].trace) > 1:
 
-                    x_center_first = tracker.tracks[i].trace[0][0][0]
-                    y_center_first = tracker.tracks[i].trace[0][1][0]
+                    # x_center_first = tracker.tracks[i].trace[0][0][0]
+                    # y_center_first = tracker.tracks[i].trace[0][1][0]
 
                     
                     # cv2.circle(result, (int(x_center_first), int(y_center_first)), 5, (0, 0, 255), -1)
