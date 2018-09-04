@@ -21,14 +21,16 @@ from keras.utils import multi_gpu_model
 
 class YOLO(object):
     _defaults = {
-        # "model_path": '../weights/yolo_weights.h5',
-        "model_path": '../weights/ep069-loss46.542-val_loss45.218.h5',
+        "model_path": '../weights/yolo_weights.h5',
+        # "model_path": '../weights/ep069-loss46.542-val_loss45.218.h5',
         "anchors_path": '../weights/yolo_anchors.txt',
-        # "classes_path": '../weights/coco_classes.txt',
-        "classes_path": '../weights/face.txt',
-        # "classes_path": '/home/damvantai/Documents/projects/deep_face_recognition/weights/people.txt',
-        "score" : 0.25,
-        "iou" : 0.1,
+        "classes_path": '../weights/coco_classes.txt',
+        # "classes_path": '../weights/face.txt',
+        # "classes_path": '../weights/people.txt',
+        "score" : 0.35,
+        # "score" : 0.25,
+        # "iou" : 0.1,
+        "iou" : 0.4,
         "model_image_size" : (416, 416),
         "gpu_num" : 1,
     }
@@ -149,52 +151,52 @@ class YOLO(object):
 
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
-            # if predicted_class == "person":
-            box = out_boxes[i]
-            score = out_scores[i]
+            if predicted_class == "person":
+                box = out_boxes[i]
+                score = out_scores[i]
 
-            label = '{} {:.2f}'.format(predicted_class, score)
-            draw = ImageDraw.Draw(original_image)
-            label_size = draw.textsize(label, font)
+                label = '{} {:.2f}'.format(predicted_class, score)
+                draw = ImageDraw.Draw(original_image)
+                label_size = draw.textsize(label, font)
 
-            top, left, bottom, right = box
-            top = max(0, np.floor(top + 0.5).astype('int32'))
-            left = max(0, np.floor(left + 0.5).astype('int32'))
-            bottom = min(original_image.size[1], np.floor(bottom + 0.5).astype('int32'))
-            right = min(original_image.size[0], np.floor(right + 0.5).astype('int32'))
+                top, left, bottom, right = box
+                top = max(0, np.floor(top + 0.5).astype('int32'))
+                left = max(0, np.floor(left + 0.5).astype('int32'))
+                bottom = min(original_image.size[1], np.floor(bottom + 0.5).astype('int32'))
+                right = min(original_image.size[0], np.floor(right + 0.5).astype('int32'))
 
-            ######
-            left += y1
-            right += y1
-            top += x1
-            bottom += x1
-            box_detect.append(np.array([left, top, right, bottom]))
-            obj_type.append(predicted_class)
+                ######
+                left += y1
+                right += y1
+                top += x1
+                bottom += x1
+                box_detect.append(np.array([left, top, right, bottom]))
+                obj_type.append(predicted_class)
 
-            x_center = (left + right) / 2
-            y_center = (top + bottom) / 2
-            centroid = np.array([[x_center], [y_center]])
-            center.append(np.round(centroid))
+                x_center = (left + right) / 2
+                y_center = (top + bottom) / 2
+                centroid = np.array([[x_center], [y_center]])
+                center.append(np.round(centroid))
 
-            ######
+                ######
 
-            print(label, (left, top), (right, bottom))
+                print(label, (left, top), (right, bottom))
 
-            if top - label_size[1] >= 0:
-                text_origin = np.array([left, top - label_size[1]])
-            else:
-                text_origin = np.array([left, top + 1])
+                if top - label_size[1] >= 0:
+                    text_origin = np.array([left, top - label_size[1]])
+                else:
+                    text_origin = np.array([left, top + 1])
 
-            # My kingdom for a good redistributable image drawing library.
-            for i in range(thickness):
+                # My kingdom for a good redistributable image drawing library.
+                for i in range(thickness):
+                    draw.rectangle(
+                        [left + i, top + i, right - i, bottom - i],
+                        outline=self.colors[c])
                 draw.rectangle(
-                    [left + i, top + i, right - i, bottom - i],
-                    outline=self.colors[c])
-            draw.rectangle(
-                [tuple(text_origin), tuple(text_origin + label_size)],
-                fill=self.colors[c])
-            draw.text(text_origin, label, fill=(0, 0, 0), font=font)
-            del draw
+                    [tuple(text_origin), tuple(text_origin + label_size)],
+                    fill=self.colors[c])
+                draw.text(text_origin, label, fill=(0, 0, 0), font=font)
+                del draw
 
         end = timer()
         print(end - start)

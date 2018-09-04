@@ -24,7 +24,7 @@ class Track(object):
         self.counted = False
         self.trace = []  # trace path
         self.ground_truth_box = self.prediction
-        self.cnt_obj = {'face': 0}
+        self.cnt_obj = {'person': 0}
         self.age = None
         self.gender = None
 
