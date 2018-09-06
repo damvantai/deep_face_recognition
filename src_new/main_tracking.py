@@ -54,18 +54,18 @@ def draw_rec(event, x, y, flags, param):
         ex, ey = x, y
         cv2.rectangle(param, (ix, iy), (x, y), (0, 255, 0), 0)
 
-def draw_line(event, x, y, flags, param):
-    global ix1, iy1, ix2, iy2, drawing, mode
-    if event == cv2.EVENT_LBUTTONDOWN:
-        ix1, iy1 = x, y
-        print(ix1, iy1)
+# def draw_line(event, x, y, flags, param):
+#     global ix1, iy1, ix2, iy2, drawing, mode
+#     if event == cv2.EVENT_LBUTTONDOWN:
+#         ix1, iy1 = x, y
+#         print(ix1, iy1)
 
-    elif event == cv2.EVENT_LBUTTONUP:
-        ix2, iy2 = x, y
-        print(ix2, iy2)
-        # cv2.line(param, (ix1, iy1), (x, y), (0, 0, 255), 2)
-        cv2.circle(param, (ix1, iy1), 5, (0, 0, 255), 4)
-        # cv2.circle(param, (x, y), 5, (0, 0, 255), 2)
+#     elif event == cv2.EVENT_LBUTTONUP:
+#         ix2, iy2 = x, y
+#         print(ix2, iy2)
+#         # cv2.line(param, (ix1, iy1), (x, y), (0, 0, 255), 2)
+#         cv2.circle(param, (ix1, iy1), 5, (0, 0, 255), 4)
+#         # cv2.circle(param, (x, y), 5, (0, 0, 255), 2)
 
 def get_crop_size(video_path):
     cap = cv2.VideoCapture(video_path)
@@ -85,22 +85,22 @@ def get_crop_size(video_path):
                 break
         break
 
-def get_crop_size1(video_path):
-    cap = cv2.VideoCapture(video_path)
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if cap_from_stream:
-            frame = cv2.resize(frame, (1280, 720))
-        cv2.namedWindow('draw_line')
-        cv2.setMouseCallback('draw_line', draw_line, frame)
-        # print("Choose your area of interest!")
-        while 1:
-            cv2.imshow('draw_line', frame)
-            k = cv2.waitKey(1) & 0xFF
-            if k == ord('a'):
-                cv2.destroyAllWindows()
-                break
-        break
+# def get_crop_size1(video_path):
+#     cap = cv2.VideoCapture(video_path)
+#     while cap.isOpened():
+#         ret, frame = cap.read()
+#         if cap_from_stream:
+#             frame = cv2.resize(frame, (1280, 720))
+#         cv2.namedWindow('draw_line')
+#         cv2.setMouseCallback('draw_line', draw_line, frame)
+#         # print("Choose your area of interest!")
+#         while 1:
+#             cv2.imshow('draw_line', frame)
+#             k = cv2.waitKey(1) & 0xFF
+#             if k == ord('a'):
+#                 cv2.destroyAllWindows()
+#                 break
+#         break
 
 def super_resolution_image(image, model):
     image = Variable(ToTensor()(image), volatile=True).unsqueeze(0)
@@ -187,7 +187,7 @@ def main():
     # model.load_state_dict(torch.load(model_name, map_location=lambda storage, loc: storage))
     # Choose area of interest
     get_crop_size(path)
-    get_crop_size1(path)
+    # get_crop_size1(path)
     print('Your area of interest: ', ix, ' ', iy, ' ', ex, ' ', ey)
     area = (ix, iy, ex, ey)
     # mid_y = (iy + ey) / 2
@@ -248,33 +248,33 @@ def main():
 
         #####
 
-        for bbox in box_detected:
-            a0, a1, a2, a3 = bbox[0], bbox[1], bbox[2], bbox[3]
-            cv2.rectangle(result, (a0 - 10, a1 - 10), (a2 + 10, a3 + 10), (0, 255, 0), 3)
-            if a1 < iy1 + 50 and a1 > iy1 -50:
-                print(a1)
-                image_crop = frame[a1:a3, a0:a2]
-                # cv2.imwrite("image.jpg", image_crop)
-                image_crop = Image.fromarray(image_crop, 'RGB')
-                # image_crop = super_resolution_image(image_crop, model)
-                image_crop_array = np.asarray(image_crop)
+        # for bbox in box_detected:
+        #     a0, a1, a2, a3 = bbox[0], bbox[1], bbox[2], bbox[3]
+        #     cv2.rectangle(result, (a0 - 10, a1 - 10), (a2 + 10, a3 + 10), (0, 255, 0), 3)
+        #     if a1 < 480 + 50 and a1 > 480 -50:
+        #         print(a1)
+        #         image_crop = frame[a1:a3, a0:a2]
+        #         # cv2.imwrite("image.jpg", image_crop)
+        #         image_crop = Image.fromarray(image_crop, 'RGB')
+        #         # image_crop = super_resolution_image(image_crop, model)
+        #         image_crop_array = np.asarray(image_crop)
 
-                face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
-                face = np.array(face_male_resize)
-                aligned_images.append(face)
-                # faces[0, :, :, :] = face
-                age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
-                aligned_images = []
-                # print(gender_predict)
-                # print(type(gender_predict))
-                label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
-                id_number += 1
-                print(label)
-                name = "../image/102/id_{}, {}".format(id_number, label)
-                cv2.imwrite(name + ".jpg", image_crop_array)
-                cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
-                              thickness=3)
-                cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
+        #         face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
+        #         face = np.array(face_male_resize)
+        #         aligned_images.append(face)
+        #         # faces[0, :, :, :] = face
+        #         age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
+        #         aligned_images = []
+        #         # print(gender_predict)
+        #         # print(type(gender_predict))
+        #         label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
+        #         id_number += 1
+        #         print(label)
+        #         name = "../image/102/id_{}, {}".format(id_number, label)
+        #         cv2.imwrite(name + ".jpg", image_crop_array)
+        #         cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
+        #                       thickness=3)
+        #         cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
 
         #####
 
@@ -318,45 +318,46 @@ def main():
                 #                   thickness=3)
                 #     cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
                 # if len(tracker.tracks[i].trace) >= 9:
-                if len(tracker.tracks[i].trace) > 1:
-                    # if len(tracker.tracks[i].trace) == 2:
-                    #     bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
-                    #     a0, a1, a2, a3 = convert_bbox(bbox)
-                    #     image_crop = frame[a1:a3, a0:a2]
-                    #     cv2.imwrite("image.jpg", image_crop)
-                    #     image_crop = Image.fromarray(image_crop, 'RGB')
-                    #     # image_crop = super_resolution_image(image_crop, model)
-                    #     image_crop_array = np.asarray(image_crop)
+                if len(tracker.tracks[i].trace) > 0:
+                    if len(tracker.tracks[i].trace) == 1:
+                        bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
+                        a0, a1, a2, a3 = convert_bbox(bbox)
+                        image_crop = frame[a1:a3, a0:a2]
+                        cv2.imwrite("image.jpg", image_crop)
+                        image_crop = Image.fromarray(image_crop, 'RGB')
+                        # image_crop = super_resolution_image(image_crop, model)
+                        image_crop_array = np.asarray(image_crop)
 
-                    #     face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
-                    #     face = np.array(face_male_resize)
-                    #     aligned_images.append(face)
-                    #     # faces[0, :, :, :] = face
-                    #     age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
-                    #     aligned_images = []
-                    #     # print(gender_predict)
-                    #     # print(type(gender_predict))
-                    #     label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
-                    #     tracker.tracks[i].age = str(int(age_predict[0]))
-                    #     tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
+                        face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
+                        face = np.array(face_male_resize)
+                        aligned_images.append(face)
+                        # faces[0, :, :, :] = face
+                        age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
+                        aligned_images = []
+                        # print(gender_predict)
+                        # print(type(gender_predict))
+                        label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
+                        tracker.tracks[i].age = str(int(age_predict[0]))
+                        tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
 
-                    #     id_number += 1
-                    #     print(label)
-                    #     name = "../image/102/id_{}, {}".format(id_number, label)
-                    #     cv2.imwrite(name + ".jpg", image_crop_array)
-                    #     cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
-                    #                   thickness=3)
-                    #     cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                        id_number += 1
+                        print(label)
+                        name = "../image/102/id_{}, {}".format(id_number, label)
+                        cv2.imwrite(name + ".jpg", image_crop_array)
+                        cv2.rectangle(result, (a0, a1), (a2, a3), color=(0, 0, 255),
+                                      thickness=3)
+                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (255, 0, 255), 3, cv2.LINE_AA)
                     # x_center_first = tracker.tracks[i].trace[0][0][0]
                     # y_center_first = tracker.tracks[i].trace[0][1][0]
 
-                    # if (len(tracker.tracks[i].trace) > 2):
-                    #     bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
-                    #     a0, a1, a2, a3 = convert_bbox(bbox)
-                    #     label = "{}, {}".format(tracker.tracks[i].age, tracker.tracks[i].gender)
-                    #     cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
-                    #                   thickness=3)
-                    #     cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
+                    if (len(tracker.tracks[i].trace) > 1):
+                        bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
+                        a0, a1, a2, a3 = convert_bbox(bbox)
+                        label = "{}, {}".format(tracker.tracks[i].age, tracker.tracks[i].gender)
+                        cv2.rectangle(result, (a0, a1), (a2, a3), color=(0, 0, 255),
+                                      thickness=3)
+                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
+
                     for j in range(len(tracker.tracks[i].trace) - 1):
                         # Draw trace line
                         x1 = tracker.tracks[i].trace[j][0][0]
