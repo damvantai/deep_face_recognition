@@ -252,10 +252,10 @@ class YOLO(object):
             label_size = draw.textsize(label, font)
 
             left, top, right, bottom = box
-            left = int(left - (right - left) / 4)
-            right = int(right + (right - left) / 4)
-            top = int(top - (bottom - top) / 4)
-            bottom = int(bottom + (bottom - top) / 4)
+            left = int(left - (right - left))
+            right = int(right + (right - left))
+            top = int(top - (bottom - top))
+            bottom = int(bottom + (bottom - top)
 
 
             left += ix

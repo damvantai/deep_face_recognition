@@ -30,7 +30,7 @@ cap_from_stream = False
 # path = '/mnt/24eb92b8-4fc1-4f32-b05c-deaa999ce6cf/Documents/datasets/face/camera_supervisor/2.avi'
 # path = '/mnt/24eb92b8-4fc1-4f32-b05c-deaa999ce6cf/Documents/datasets/face/camera_supervisor/1_02_cut.avi'
 # path = '/home/neosai/Documents/dataset/camera_supervisor/1_03_H_082018120000.avi'
-path = '/home/neosai/Documents/dataset/camera_supervisor/1_02.avi'
+path = '../1_02.avi'
 # path = '/home/neosai/Documents/dataset/camera_supervisor/1_03.avi'
 # path = '/home/neosai/Documents/dataset/camera_supervisor/people counting camera [720p].mp4'
 # path = '/home/neosai/Documents/dataset/camera_supervisor/People.avi'
@@ -209,7 +209,7 @@ def main():
         h = 720
     # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('/home/neosai/Documents/projects/deep_face_recognition/video/1_0222.avi', fourcc, 15, (w, h))
+    out = cv2.VideoWriter('../video/1_0222.avi', fourcc, 15, (w, h))
 
     # Create Object Detector
     detector = YOLO()
@@ -319,35 +319,35 @@ def main():
                 #     cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
                 # if len(tracker.tracks[i].trace) >= 9:
                 if len(tracker.tracks[i].trace) > 0:
-                    if len(tracker.tracks[i].trace) == 1:
-                        print("a")
-                        bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
-                        a0, a1, a2, a3 = convert_bbox(bbox)
-                        image_crop = frame[a1:a3, a0:a2]
-                        cv2.imwrite("image.jpg", image_crop)
-                        image_crop = Image.fromarray(image_crop, 'RGB')
-                        # image_crop = super_resolution_image(image_crop, model)
-                        image_crop_array = np.asarray(image_crop)
+                    # if len(tracker.tracks[i].trace) == 1:
+                    #     print("a")
+                    #     bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
+                    #     a0, a1, a2, a3 = convert_bbox(bbox)
+                    #     image_crop = frame[a1:a3, a0:a2]
+                    #     cv2.imwrite("image.jpg", image_crop)
+                    #     image_crop = Image.fromarray(image_crop, 'RGB')
+                    #     # image_crop = super_resolution_image(image_crop, model)
+                    #     image_crop_array = np.asarray(image_crop)
 
-                        face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
-                        face = np.array(face_male_resize)
-                        aligned_images.append(face)
-                        # faces[0, :, :, :] = face
-                        age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
-                        aligned_images = []
-                        # print(gender_predict)
-                        # print(type(gender_predict))
-                        label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
-                        tracker.tracks[i].age = str(int(age_predict[0]))
-                        tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
+                    #     face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
+                    #     face = np.array(face_male_resize)
+                    #     aligned_images.append(face)
+                    #     # faces[0, :, :, :] = face
+                    #     age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
+                    #     aligned_images = []
+                    #     # print(gender_predict)
+                    #     # print(type(gender_predict))
+                    #     label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
+                    #     tracker.tracks[i].age = str(int(age_predict[0]))
+                    #     tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
 
-                        id_number += 1
-                        print(label)
-                        name = "../image/102/id_{}, {}".format(id_number, label)
-                        cv2.imwrite(name + ".jpg", image_crop_array)
-                        cv2.rectangle(result, (a1, a0), (a3, a2), color=(255, 0, 0),
-                                      thickness=3)
-                        cv2.putText(result, label, (a1 + 6, a0 - 6), font, 2, (255, 0, 0), 3, cv2.LINE_AA)
+                    #     id_number += 1
+                    #     print(label)
+                    #     name = "../image/102/id_{}, {}".format(id_number, label)
+                    #     cv2.imwrite(name + ".jpg", image_crop_array)
+                    #     cv2.rectangle(result, (a1, a0), (a3, a2), color=(255, 0, 0),
+                    #                   thickness=3)
+                    #     cv2.putText(result, label, (a1 + 6, a0 - 6), font, 2, (255, 0, 0), 3, cv2.LINE_AA)
                     # x_center_first = tracker.tracks[i].trace[0][0][0]
                     # y_center_first = tracker.tracks[i].trace[0][1][0]
 
