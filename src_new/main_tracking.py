@@ -320,6 +320,7 @@ def main():
                 # if len(tracker.tracks[i].trace) >= 9:
                 if len(tracker.tracks[i].trace) > 0:
                     if len(tracker.tracks[i].trace) == 1:
+                        print("a")
                         bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
                         a0, a1, a2, a3 = convert_bbox(bbox)
                         image_crop = frame[a1:a3, a0:a2]
@@ -344,9 +345,9 @@ def main():
                         print(label)
                         name = "../image/102/id_{}, {}".format(id_number, label)
                         cv2.imwrite(name + ".jpg", image_crop_array)
-                        cv2.rectangle(result, (a0, a1), (a2, a3), color=(0, 0, 255),
+                        cv2.rectangle(result, (a1, a0), (a3, a2), color=(255, 0, 0),
                                       thickness=3)
-                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (255, 0, 255), 3, cv2.LINE_AA)
+                        cv2.putText(result, label, (a1 + 6, a0 - 6), font, 2, (255, 0, 0), 3, cv2.LINE_AA)
                     # x_center_first = tracker.tracks[i].trace[0][0][0]
                     # y_center_first = tracker.tracks[i].trace[0][1][0]
 
@@ -356,7 +357,7 @@ def main():
                         label = "{}, {}".format(tracker.tracks[i].age, tracker.tracks[i].gender)
                         cv2.rectangle(result, (a0, a1), (a2, a3), color=(0, 0, 255),
                                       thickness=3)
-                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
+                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 0, 255), 3, cv2.LINE_AA)
 
                     for j in range(len(tracker.tracks[i].trace) - 1):
                         # Draw trace line
