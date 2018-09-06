@@ -33,8 +33,8 @@ class YOLO(object):
         self.model_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/ep069-loss46.542-val_loss45.218.h5'  # model path or trained weights path
         self.anchors_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/yolo_anchors.txt'
         self.classes_path = '/home/neosai/Documents/projects/deep_face_recognition/weights/face.txt'
-        self.score = 0.25
-        self.iou = 0.1
+        self.score = 0.3
+        self.iou = 0.2
         self.class_names = self._get_class()
         self.anchors = self._get_anchors()
         self.sess = K.get_session()
@@ -252,10 +252,14 @@ class YOLO(object):
             label_size = draw.textsize(label, font)
 
             left, top, right, bottom = box
-            left = int(left - (right - left))
-            right = int(right + (right - left))
-            top = int(top - (bottom - top))
-            bottom = int(bottom + (bottom - top)
+            # left = int(left - (right - left))
+            # right = int(right + (right - left))
+            # top = int(top - (bottom - top))
+            # bottom = int(bottom + (bottom - top))
+            left = int(left)
+            right = int(right)
+            top = int(top)
+            bottom = int(bottom)
 
 
             left += ix
@@ -283,10 +287,10 @@ class YOLO(object):
                 draw.rectangle(
                     [left + i, top + i, right - i, bottom - i],
                     outline=self.colors[c])
-            draw.rectangle(
-                [tuple(text_origin), tuple(text_origin + label_size)],
-                fill=self.colors[c])
-            draw.text(text_origin, label, fill=(0, 0, 0), font=font)
+            # draw.rectangle(
+            #     [tuple(text_origin), tuple(text_origin + label_size)],
+            #     fill=self.colors[c])
+            # draw.text(text_origin, label, fill=(0, 0, 0), font=font)
             del draw
 
         end = timer()

@@ -162,7 +162,7 @@ class Tracker(object):
                 track = Track(detections[un_assigned_detects[i]], self.trackIdCount)
                 track.update_obj(obj_type[un_assigned_detects[i]])
                 self.trackIdCount += 1
-                # self.tracks.append(track)
+                self.tracks.append(track)
 
         # Update KalmanFilter state, lastResults and tracks trace
         for i in range(len(assignment)):

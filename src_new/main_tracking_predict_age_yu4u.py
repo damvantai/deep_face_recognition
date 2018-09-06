@@ -22,7 +22,7 @@ ix, iy, ex, ey = -1, -1, -1, -1
 ix1, iy1, ix2, iy2 = -1, -1, -1, -1
 cap_from_stream = False
 
-path = '/home/neosai/Documents/dataset/camera_supervisor/1_03.avi'
+path = '/home/neosai/Documents/dataset/camera_supervisor/1_02.avi'
 
 # def limit_mem():
 # 	K.get_session().close()
@@ -130,7 +130,7 @@ def main():
 		h = 720
 	# fourcc = cv2.VideoWriter_fourcc(*'MJPG')
 	fourcc = cv2.VideoWriter_fourcc(*'XVID')
-	out = cv2.VideoWriter('/home/neosai/Documents/projects/deep_face_recognition/video/1_034.avi', fourcc, 15, (w, h))
+	out = cv2.VideoWriter('/home/neosai/Documents/projects/deep_face_recognition/video/1_02222.avi', fourcc, 15, (w, h))
 
 	# Create Object Detector
 	detector = YOLO()
@@ -167,38 +167,38 @@ def main():
 			cv2.rectangle(result, (a0 - 10, a1 - 10), (a2 + 10, a3 + 10), (0, 255, 0), 3)
 			print(a1)
 			print(iy1)
-			# if a1 < iy1 + 50 and a1 > iy1 -50:
-			image_crop = frame[a1:a3, a0:a2]
-			cv2.imwrite("image.jpg", image_crop)
-			image_crop = Image.fromarray(image_crop, 'RGB')
-			image_crop = super_resolution_image(image_crop, model)
-			image_crop_array = np.asarray(image_crop)
+			if a1 < iy1 + 50 and a1 > iy1 -50:
+				image_crop = frame[a1:a3, a0:a2]
+				cv2.imwrite("image.jpg", image_crop)
+				image_crop = Image.fromarray(image_crop, 'RGB')
+				image_crop = super_resolution_image(image_crop, model)
+				image_crop_array = np.asarray(image_crop)
 
-			face_male_resize = image_crop.resize((img_size, img_size), Image.ANTIALIAS)
-			face = np.array(face_male_resize)
-			aligned_images.append(face)
-			faces[0, :, :, :] = face
-			# age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
-			
+				face_male_resize = image_crop.resize((img_size, img_size), Image.ANTIALIAS)
+				face = np.array(face_male_resize)
+				aligned_images.append(face)
+				faces[0, :, :, :] = face
+				# age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
+				
 
-			# predict ages and genders of the detected faces
-			results = model_predict_age_and_gender.predict(faces)
-			predicted_genders = results[0]
-			ages = np.arange(0, 101).reshape(101, 1)
-			predicted_ages = results[1].dot(ages).flatten()
-			aligned_images = []
-			label = "{}, {}".format(int(predicted_ages[0]),
-									"F" if predicted_genders[0][0] > 0.5 else "M")
-			# print(gender_predict)
-			# print(type(gender_predict))
-			# label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
-			id_number += 1
-			print(label)
-			name = "../image/102/id_{}, {}".format(id_number, label)
-			cv2.imwrite(name + ".jpg", image_crop_array)
-			cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
-						  thickness=3)
-			cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
+				# predict ages and genders of the detected faces
+				results = model_predict_age_and_gender.predict(faces)
+				predicted_genders = results[0]
+				ages = np.arange(0, 101).reshape(101, 1)
+				predicted_ages = results[1].dot(ages).flatten()
+				aligned_images = []
+				label = "{}, {}".format(int(predicted_ages[0]),
+										"F" if predicted_genders[0][0] > 0.5 else "M")
+				# print(gender_predict)
+				# print(type(gender_predict))
+				# label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
+				id_number += 1
+				print(label)
+				name = "../image/102/id_{}, {}".format(id_number, label)
+				cv2.imwrite(name + ".jpg", image_crop_array)
+				cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
+							  thickness=3)
+				cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
 
 		#####
 
@@ -240,12 +240,8 @@ def main():
 				#	 cv2.rectangle(result, (a0 - 5, a1 - 5), (a2 + 5, a3 + 5), color=(0, 0, 255),
 				#				   thickness=3)
 				#	 cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
-				if len(tracker.tracks[i].trace) >= 9:
-
-					x_center_first = tracker.tracks[i].trace[0][0][0]
-					y_center_first = tracker.tracks[i].trace[0][1][0]
-
-					
+				if len(tracker.tracks[i].trace) >= 0:	
+					print(len(tracker.tracks[i].trace))
 					# cv2.circle(result, (int(x_center_first), int(y_center_first)), 5, (0, 0, 255), -1)
 					for j in range(len(tracker.tracks[i].trace) - 1):
 						# Draw trace line
@@ -260,6 +256,8 @@ def main():
 					if (len(tracker.tracks[i].trace) >= 9) and (not tracker.tracks[i].counted):
 						bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
 						tracker.tracks[i].counted = True
+						x_center_first = tracker.tracks[i].trace[0][0][0]
+						y_center_first = tracker.tracks[i].trace[0][1][0]
 						x_center_second = tracker.tracks[i].trace[8][0][0]
 						y_center_second = tracker.tracks[i].trace[8][1][0]
 						# if y_center_first > (a * x_center_first + b):

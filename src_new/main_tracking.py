@@ -179,11 +179,11 @@ def main():
     # faces = np.empty((1,160, 160, 3))
     aligned_images = []
 
-    upscale_factor = 4
+    # upscale_factor = 4
     # model_name = "/home/neosai/Documents/projects/deep_face_recognition/weights/netG_epoch_4_100.pth"
-    # limit_mem()
+    # # limit_mem()
     # model = Generator(upscale_factor).eval()
-    # model.cuda()
+    # # model.cuda()
     # model.load_state_dict(torch.load(model_name, map_location=lambda storage, loc: storage))
     # Choose area of interest
     get_crop_size(path)
@@ -216,7 +216,7 @@ def main():
 
     # Create Object Tracker
     # tracker = Tracker(iou_thresh=0.3, max_frames_to_skip=5, max_trace_length=20, trackIdCount=0)
-    tracker = Tracker(iou_thresh=0.1, max_frames_to_skip=5, max_trace_length=20, trackIdCount=0)
+    tracker = Tracker(iou_thresh=0.1, max_frames_to_skip=10, max_trace_length=20, trackIdCount=0)
 
     # Variables initialization
     # track_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
@@ -319,35 +319,35 @@ def main():
                 #     cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 255, 0), 3, cv2.LINE_AA)
                 # if len(tracker.tracks[i].trace) >= 9:
                 if len(tracker.tracks[i].trace) > 0:
-                    # if len(tracker.tracks[i].trace) == 1:
-                    #     print("a")
-                    #     bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
-                    #     a0, a1, a2, a3 = convert_bbox(bbox)
-                    #     image_crop = frame[a1:a3, a0:a2]
-                    #     cv2.imwrite("image.jpg", image_crop)
-                    #     image_crop = Image.fromarray(image_crop, 'RGB')
-                    #     # image_crop = super_resolution_image(image_crop, model)
-                    #     image_crop_array = np.asarray(image_crop)
+                    if len(tracker.tracks[i].trace) == 1:
+                        print("a")
+                        bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
+                        a0, a1, a2, a3 = convert_bbox(bbox)
+                        image_crop = frame[a1:a3, a0:a2]
+                        cv2.imwrite("image.jpg", image_crop)
+                        image_crop = Image.fromarray(image_crop, 'RGB')
+                        # image_crop = super_resolution_image(image_crop, model)
+                        image_crop_array = np.asarray(image_crop)
 
-                    #     face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
-                    #     face = np.array(face_male_resize)
-                    #     aligned_images.append(face)
-                    #     # faces[0, :, :, :] = face
-                    #     age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
-                    #     aligned_images = []
-                    #     # print(gender_predict)
-                    #     # print(type(gender_predict))
-                    #     label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
-                    #     tracker.tracks[i].age = str(int(age_predict[0]))
-                    #     tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
+                        face_male_resize = image_crop.resize((160, 160), Image.ANTIALIAS)
+                        face = np.array(face_male_resize)
+                        aligned_images.append(face)
+                        # faces[0, :, :, :] = face
+                        age_predict, gender_predict = sess.run([age, gender], feed_dict={images_pl: aligned_images, train_mode: False})
+                        aligned_images = []
+                        # print(gender_predict)
+                        # print(type(gender_predict))
+                        label = "{}, {}".format(int(age_predict[0]), "Female" if gender_predict[0] == 0 else "Male")
+                        tracker.tracks[i].age = str(int(age_predict[0]))
+                        tracker.tracks[i].gender = "Female" if gender_predict[0] == 0 else "Male"
 
-                    #     id_number += 1
-                    #     print(label)
-                    #     name = "../image/102/id_{}, {}".format(id_number, label)
-                    #     cv2.imwrite(name + ".jpg", image_crop_array)
-                    #     cv2.rectangle(result, (a1, a0), (a3, a2), color=(255, 0, 0),
-                    #                   thickness=3)
-                    #     cv2.putText(result, label, (a1 + 6, a0 - 6), font, 2, (255, 0, 0), 3, cv2.LINE_AA)
+                        id_number += 1
+                        print(label)
+                        name = "../image/102/id_{}, {}".format(id_number, label)
+                        cv2.imwrite(name + ".jpg", image_crop_array)
+                        cv2.rectangle(result, (a1, a0), (a3, a2), color=(255, 0, 0),
+                                      thickness=1)
+                        cv2.putText(result, label, (a1 + 6, a0 - 6), font, 2, (255, 0, 0), 1, cv2.LINE_AA)
                     # x_center_first = tracker.tracks[i].trace[0][0][0]
                     # y_center_first = tracker.tracks[i].trace[0][1][0]
 
@@ -356,8 +356,8 @@ def main():
                         a0, a1, a2, a3 = convert_bbox(bbox)
                         label = "{}, {}".format(tracker.tracks[i].age, tracker.tracks[i].gender)
                         cv2.rectangle(result, (a0, a1), (a2, a3), color=(0, 0, 255),
-                                      thickness=3)
-                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 0, 255), 3, cv2.LINE_AA)
+                                      thickness=1)
+                        cv2.putText(result, label, (a0 + 6, a1 - 6), font, 2, (0, 0, 255), 1, cv2.LINE_AA)
 
                     for j in range(len(tracker.tracks[i].trace) - 1):
                         # Draw trace line
@@ -370,7 +370,7 @@ def main():
                                  track_colors[clr], 2)
                         
                         # cv2.putText(result, label, ())
-                    classes = tracker.tracks[i].get_obj()
+                    # classes = tracker.tracks[i].get_obj()
                     if (len(tracker.tracks[i].trace) >= 9) and (not tracker.tracks[i].counted):
                         bbox = tracker.tracks[i].ground_truth_box.reshape((4, 1))
                         tracker.tracks[i].counted = True
