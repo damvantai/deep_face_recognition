@@ -209,7 +209,7 @@ def main():
         h = 720
     # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('/home/neosai/Documents/projects/deep_face_recognition/video/1_02.avi', fourcc, 15, (w, h))
+    out = cv2.VideoWriter('/home/neosai/Documents/projects/deep_face_recognition/video/1_0222.avi', fourcc, 15, (w, h))
 
     # Create Object Detector
     detector = YOLO()
